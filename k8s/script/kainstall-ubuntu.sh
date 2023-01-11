@@ -1734,7 +1734,7 @@ apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 ${kubelet_nodeRegistration}
 ---
-apiVersion: kubeproxy.config.k8s.io/v1alpha1
+apiVersion: kubeproxy.config.k8s.io/v1beta2
 kind: KubeProxyConfiguration
 mode: ipvs
 ipvs:
