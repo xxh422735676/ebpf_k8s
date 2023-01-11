@@ -79,6 +79,8 @@ SCRIPT_PARAMETER="$*"
 OFFLINE_DIR="/tmp/kainstall-offline-file/"
 OFFLINE_FILE=""
 OS_SUPPORT="ubuntu20.04 ubuntu20.10 ubuntu21.04"
+GITHUB_PROXY=""
+GCR_PROXY=""
 SKIP_UPGRADE_PLAN=${SKIP_UPGRADE_PLAN:-false}
 SKIP_SET_OS_REPO=${SKIP_SET_OS_REPO:-false}
 
