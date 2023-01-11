@@ -1962,7 +1962,7 @@ discovery:
   timeout: 5m0s
 ${kubelet_nodeRegistration}
 EOF
-      kubeadm join --config /etc/kubernetes/kubeadmcfg.yaml
+      echo 'y' | kubeadm reset && kubeadm join --config /etc/kubernetes/kubeadmcfg.yaml
     "
     check::exit_code "$?" "kubeadm join" "worker $host join cluster"
   
