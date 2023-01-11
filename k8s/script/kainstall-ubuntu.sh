@@ -1734,7 +1734,7 @@ apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 ${kubelet_nodeRegistration}
 ---
-apiVersion: kubeproxy.config.k8s.io/v1beta2
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
 kind: KubeProxyConfiguration
 mode: ipvs
 ipvs:
@@ -1744,7 +1744,7 @@ ipvs:
   scheduler: 'wrr'
 
 ---
-apiVersion: kubelet.config.k8s.io/v1beta2
+apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 maxPods: 200
 cgroupDriver: systemd
