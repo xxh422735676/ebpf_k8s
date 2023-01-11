@@ -1730,7 +1730,7 @@ function kubeadm::init() {
     PAUSE_VERSION=$(kubeadm config images list 2>/dev/null | awk -F: '/pause/ {print $2}')
     cat << EOF > /etc/kubernetes/kubeadmcfg.yaml
 ---
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: InitConfiguration
 ${kubelet_nodeRegistration}
 ---
@@ -1744,7 +1744,7 @@ ipvs:
   scheduler: 'wrr'
 
 ---
-apiVersion: kubelet.config.k8s.io/v1beta1
+apiVersion: kubelet.config.k8s.io/v1beta2
 kind: KubeletConfiguration
 maxPods: 200
 cgroupDriver: systemd
@@ -1787,7 +1787,7 @@ enforceNodeAllocatable:
 - pods
 
 ---
-apiVersion: kubeadm.k8s.io/v1beta3
+apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
 kubernetesVersion: $KUBE_VERSION
 controlPlaneEndpoint: $KUBE_APISERVER:6443
