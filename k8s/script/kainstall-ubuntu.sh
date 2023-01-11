@@ -661,10 +661,6 @@ EOF
   chmod -x /etc/update-motd.d/*
   cat << EOF > /etc/profile.d/zz-ssh-login-info.sh
 #!/bin/sh
-#
-# @Time    : 2020-02-04
-# @Author  : lework
-# @Desc    : ssh login banner
 
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:\$PATH
 shopt -q login_shell && : || return 0
@@ -1862,7 +1858,7 @@ EOF
   check::exit_code "$?" "kubeadm init" "${MGMT_NODE}: set kubeadmcfg.yaml" "exit"
   
   log::info "[kubeadm init]" "${MGMT_NODE}: kubeadm init start."
-  command::exec "${MGMT_NODE}" "kubeadm init --config=/etc/kubernetes/kubeadmcfg.yaml --upload-certs"
+  command::exec "${MGMT_NODE}" "echo 'y' | kubeadm reset && kubeadm init --config=/etc/kubernetes/kubeadmcfg.yaml --upload-certs"
   check::exit_code "$?" "kubeadm init" "${MGMT_NODE}: kubeadm init" "exit"
   
   sleep 3
