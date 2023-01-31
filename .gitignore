@@ -3,3 +3,7 @@
 # Except this file
 !.gitignore
 .DS_Store
+**/dev*.*
+kainstall-ubuntu.sh
+.vscode/**
+*.o
