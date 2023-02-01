@@ -1,5 +1,64 @@
 # ebpf_k8s
 
+This document is about to illustrate the purpose, project organization and progress.
+
+## Purpose
+
+The method of eBPF non-intrusive injection into the Linux kernel is adopted, and the service registry and front-end and back-end management program for statistical observation data are designed externally to achieve the observability of Kubernetes. At the same time, based on the feature that eBPF can modify data traffic packets and forward socket traffic, it realizes the acceleration of network traffic such as Nginx Ingress in Kubernetes.
+
+The project has three subsystems: data monitoring, visualization and load balancing. Among them, the data monitoring system includes the observation, statistics and acceleration functions of the Kubernetes network traffic of a single machine. The visualization system includes the monitoring of the cluster status, the monitoring status of the upper and lower limit specific hosts, and the visualization output function. The load balancing system includes the acceleration of the memory database, the load balancing of the traffic and the gateway function.
+
+The cluster is set up in the same subnet.
+
+## Project Organization
+
+### K8s
+
+Store kubernetes' initialization scripts, configuration files.
+
+### Gui
+
+Store the source code, build script and configuration parameter files related to the visualization system
+
+### eBPF
+
+Store the source code related to ebpf, including kubernetes network traffic monitoring and data statistics, kernel xdp acceleration, memory database acceleration, traffic load balancing and other functions, as well as related initialization scripts.
+
+## Project progress
+
+### Kubernetes
+
+|     Assignments       | Progress |
+| ------------------------- | ---- |
+| kubernetes' initialization scripts |      |
+
+
+
+### Visualization
+
+| Assignments               | Progress |
+| ------------------ | ---- |
+| 前端数据可视化输出 |      |
+| 后端业务逻辑处理   |      |
+| 部署脚本           |      |
+
+### ebpf
+
+| Assignments              | Progress |
+| ----------------- | ---- |
+| Network traffic RX/TX monitoring |      |
+| Internal flow monitoring of container  |      |
+| Load balancing         |      |
+| Data statistics          |      |
+| Deployment script          |      |
+
+
+
+
+
+
+# ebpf_k8s
+
 本文档阐述项目的目的，组织结构，以及项目进度。
 
 ## 目的
