@@ -17,5 +17,5 @@ swapoff -a
 
 mkdir ./kubeadm.config 
 cd kubeadm.config
-kubeadm config print init-defaults > new-config.yaml
-kubeadm init --config new-config.yaml
+#kubeadm config print init-defaults > new-config.yaml
+kubeadm init --config ./init-config.yaml

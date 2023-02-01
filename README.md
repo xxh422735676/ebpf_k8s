@@ -38,9 +38,9 @@ Store the source code related to ebpf, including kubernetes network traffic moni
 
 | Assignments               | Progress |
 | ------------------ | ---- |
-| 前端数据可视化输出 |      |
-| 后端业务逻辑处理   |      |
-| 部署脚本           |      |
+| Front-end data visualization output |      |
+| Back-end business logic processing   |      |
+| Deployment script           |      |
 
 ### ebpf
 
