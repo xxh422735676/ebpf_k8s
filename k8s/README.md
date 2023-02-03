@@ -1,6 +1,15 @@
-# k8s项目说明
+# k8s project illustration
 
-[参考脚本](https://github.com/lework/kainstall/blob/master/kainstall-ubuntu.sh)
+## REFs
+
+[referenced script](https://github.com/lework/kainstall/blob/master/kainstall-ubuntu.sh)
 
 [kubernetes api refs](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)
 
+## config.yaml
+
+This section stores most of kubernetes config files.
+
+## util
+
+This section contain shell scripts to help install and proper configure kubernetes master and nodes

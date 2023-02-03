@@ -4,6 +4,6 @@
 !.gitignore
 .DS_Store
 **/dev*.*
-kainstall-ubuntu.sh
+**/kainstall-ubuntu.sh
 .vscode/**
 *.o

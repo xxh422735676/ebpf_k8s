@@ -1,7 +1,7 @@
 GCC = gcc
 
 BPF_PROGRAM  ?= bpf_program
-# BPF_PROGRAM  ?= sock_example
+
 KERNEL_SRC = usr/src/linux-source-5.15.0
 
 INCLUDE_PATH += -I/$(KERNEL_SRC)/tools/testing/selftests/bpf

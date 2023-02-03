@@ -56,11 +56,6 @@ Store the source code related to ebpf, including kubernetes network traffic moni
 
 
 
-
-# ebpf_k8s
-
-本文档阐述项目的目的，组织结构，以及项目进度。
-
 ## 目的
 
 采用eBPF无侵入式注入Linux内核的方式，并且外部设计了用于统计观测数据的服务注册中心和前后端管理程序，实现了对Kubernetes的可观测性。同时基于eBPF可以修改数据流量包，转发套接字流量的特性，实现了在Kubernetes内部对Nginx Ingress等网络通信流量的加速。
