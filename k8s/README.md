@@ -6,10 +6,6 @@
 
 [kubernetes api refs](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/)
 
-## config.yaml
+## config
 
 This section stores most of kubernetes config files.
-
-## util
-
-This section contain shell scripts to help install and proper configure kubernetes master and nodes

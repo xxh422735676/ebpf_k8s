@@ -12,6 +12,4 @@ This section contains eBPF files to obtain data inside kernel space from linux n
 
 This section contains eBPF files to process network packets inside Linux kernel space and invoke dataCollection program if necessary.
 
-## script
-
 This section contains shell scripts to initialize libbpf,bcc,bpftools module in kernel and provide user space support, like sending data to remote host.

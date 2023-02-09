@@ -14,15 +14,19 @@ The cluster is set up in the same subnet.
 
 ### K8s
 
-Store kubernetes' initialization scripts, configuration files.
+Store kubernetes' runtime scripts and configuration files.
 
 ### Gui
 
-Store the source code, build script and configuration parameter files related to the visualization system
+Store the source code, and configuration parameter files related to the visualization system
 
 ### eBPF
 
-Store the source code related to ebpf, including kubernetes network traffic monitoring and data statistics, kernel xdp acceleration, memory database acceleration, traffic load balancing and other functions, as well as related initialization scripts.
+Store the source code related to ebpf, including kubernetes network traffic monitoring and data statistics, kernel xdp acceleration, memory database acceleration, traffic load balancing and other functions.
+
+### script
+
+Store shell scripts to setup eBPF and kubernetes environments.
 
 ## Project progress
 
