@@ -1,15 +1,37 @@
 #!/bin/bash
+###################################################################
+#Script Name    : install_k8s_master.sh
+#Description    : Install kubernetes cluster && cilium.
+#Author         : xxh422735676
+#Email          : 422735676@qq.com
+###################################################################
 
-## Install Container Runtimes https://kubernetes.io/docs/setup/production-environment/container-runtimes/
-# //Kubernetes releases before v1.24 included a direct integration with Docker Engine,
+# set -x
+set -e
+
+set -o errtrace         # Make sure any error trap is inherited
+set -o nounset          # Disallow expansion of unset variables
+set -o pipefail         # Use last non-zero exit code in a pipeline
+
+## CONFIGURATIONS ##
+
+APISERVER_IP=$(ip a | awk  '/192/ {print $2}' | sed 's%/24%%g')
+MASTER_TOKEN=''
+MASTER_DISCRET=''
+
+source ./include.sh
 
 mkdir /tmp/kubeinstall -p
 pushd /tmp/kubeinstall 
+log::info "Script Name    : $(pwd)/install_k8s_master.sh"
+sleep 2
+## Install Container Runtimes https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+# //Kubernetes releases before v1.24 included a direct integration with Docker Engine,
+
 
 ### Forwarding IPv4 and letting iptables see bridged traffic
 
-
-cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf 
 overlay
 br_netfilter
 EOF
@@ -53,8 +75,10 @@ sudo systemctl daemon-reload
 sudo systemctl enable --now containerd
 sudo systemctl status containerd | grep running
 
+log::info 'containerd installation finished'
 #------------------
 ## Install kubeadm kubectl kubelet
+log::info 'installing kubernetes without kube/proxy'
 sudo apt update
 sudo apt-get install -y apt-transport-https ca-certificates curl
 
@@ -71,21 +95,24 @@ sudo apt-mark hold kubelet kubeadm kubectl
 
 sudo swapoff -a
 
-mkdir ./kubeadm.config 
-cd kubeadm.config
-#kubeadm config print init-defaults > new-config.yaml
-kubeadm init --skip-phases=addon/kube-proxy --config ./init-config.yaml
+kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=$APISERVER_IP --skip-phases=addon/kube-proxy
 
-kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.2.71 --skip-phases=addon/kube-proxy
+export KUBECONFIG=/etc/kubernetes/admin.conf
+echo 'export KUBECONFIG=/etc/kubernetes/admin.conf' >> ~/.profile
+
+log::info 'kubernetes installation compeleted'
+# get token 
+MASTER_TOKEN=$(kubeadm token create)
+
+# get sha256
+MASTER_DISCRET=$(openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //')
+
+log::info "you can join nodes with command run on node machine: kubeadm join 192.168.2.71:6443 --token $MASTER_TOKEN	--discovery-token-ca-cert-hash sha256:$MASTER_DISCRET"
+
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+log::info 'node isolation on master disabled'
 
-#集群已经有kube-proxy
-kubectl -n kube-system delete ds kube-proxy
-# Delete the configmap as well to avoid kube-proxy being reinstalled during a kubeadm upgrade (works only for K8s 1.19 and newer)
-kubectl -n kube-system delete cm kube-proxy
-# Run on each node with root permissions:
-iptables-save | grep -v KUBE | iptables-restore
-
+log::info 'installing cilium'
 
 # helm && cilium
 
@@ -95,9 +122,8 @@ sudo chmod 700 get_helm.sh
 
 helm repo add cilium https://helm.cilium.io
 
-
-
 #cilium cli 
+
 CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/master/stable.txt)
 CLI_ARCH=amd64
 if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
@@ -107,29 +133,25 @@ sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
 rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
 
 
-
-helm install cilium cilium/cilium    --namespace kube-system    --set hubble.relay.enabled=true     --set hubble.ui.enabled=true    --set prometheus.enabled=true    --set operator.prometheus.enabled=true    --set hubble.enabled=true    --set hubble.metrics.enabled="{dns,drop,tcp,flow,port-distribution,icmp,http}"
-
-
-kubeadm join 192.168.2.71:6443 --token hm4dp0.lopnffb8tjfbie26 \
-	--discovery-token-ca-cert-hash sha256:4724f347873002f0e878cead8cb11603663a1a4ffbc82609535a53d591dbb077 
-# get token 
-kubeadm token create
-# get sha256
-openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
-   openssl dgst -sha256 -hex | sed 's/^.* //'
-
-
-    export KUBECONFIG=/etc/kubernetes/admin.conf
-
-[dev@centos9 ~]$ kubectl create -f https://raw.githubusercontent.com/cilium/cilium/v1.9/install/kubernetes/quick-install.yaml
-
 helm template cilium cilium/cilium  \
     --namespace kube-system \
     --set kubeProxyReplacement=strict \
-    --set k8sServiceHost=apiserver.foxchan.com \
+    --set k8sServiceHost=$APISERVER_IP \
     --set k8sServicePort=6443 > cilium.yaml
-sed -i "s/replicas: 2/replicas 1/g" cilium.yaml
+log::info 'using one operator coz of anti-affinity'
+sed -i "s/replicas: 2/replicas: 1/g" cilium.yaml
+
 kubectl apply -f cilium.yaml
 
-ip a | awk  '/192/ {print $2}' | sed 's%/24%%g'
+log::info 'installation compeletd!'
+
+popd
+
+log::info 'checking all status'
+sleep 5
+
+cilium status --wait
+kubectl get nodes
+kubectl get pods -n kube-system
+
+log::info "please run 'source ~/.profile' to start using kubernetes"
